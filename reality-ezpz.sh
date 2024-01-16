@@ -1171,7 +1171,7 @@ EOF
     "loglevel": "error"
   },
   "dns": {
-    "servers": [$([[ ${config[safenet]} == ON ]] && echo '"tcp+local://1.1.1.3","tcp+local://1.0.0.3"' || echo '"tcp+local://1.1.1.1","tcp+local://1.0.0.1"')]
+    "servers": [$([[ ${config[safenet]} == ON ]] && echo '"https+local://family.cloudflare-dns.com/dns-query","tcp+local://1.1.1.3"' || echo '"https+local://dns.cloudflare.com/dns-query","tcp+local://1.1.1.1"')]
   },
   "inbounds": [
     {
@@ -1209,7 +1209,8 @@ EOF
         "enabled": true,
         "destOverride": [
           "http",
-          "tls"
+          "tls",
+          "quic"
         ]
       }
     }
