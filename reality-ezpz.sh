@@ -38,8 +38,8 @@ HEIGHT=30
 WIDTH=60
 CHOICE_HEIGHT=20
 
-image[xray]="teddysun/xray:1.8.4"
-image[sing-box]="gzxhwq/sing-box:v1.6.5"
+image[xray]="teddysun/xray:1.8.7"
+image[sing-box]="gzxhwq/sing-box:v1.8.1"
 image[nginx]="nginx:1.24.0"
 image[certbot]="certbot/certbot:v2.6.0"
 image[haproxy]="haproxy:2.8.0"
@@ -696,7 +696,7 @@ services:
     $([[ ${config[security]} != 'reality' ]] && echo "- 8443" || true)
     restart: always
     environment:
-      TZ: Etc/UTC
+      TZ: Asia/Singapore
     volumes:
     - ./${path[engine]#${config_path}/}:/etc/${config[core]}/config.json
     $([[ ${config[security]} != 'reality' ]] && { [[ ${config[transport]} == 'http' ]] || [[ ${config[transport]} == 'tcp' ]] || [[ ${config[transport]} == 'tuic' ]] || [[ ${config[transport]} == 'hysteria2' ]]; } && echo "- ./${path[server_crt]#${config_path}/}:/etc/${config[core]}/server.crt" || true)
