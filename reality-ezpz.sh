@@ -38,8 +38,8 @@ HEIGHT=30
 WIDTH=60
 CHOICE_HEIGHT=20
 
-image[xray]="teddysun/xray:1.8.4"
-image[sing-box]="gzxhwq/sing-box:v1.6.5"
+image[xray]="teddysun/xray:1.8.7"
+image[sing-box]="gzxhwq/sing-box:v1.8.1"
 image[nginx]="nginx:1.24.0"
 image[certbot]="certbot/certbot:v2.6.0"
 image[haproxy]="haproxy:2.8.0"
@@ -668,7 +668,7 @@ function install_docker {
     docker_cmd="docker-compose"
     return 0
   fi
-  curl -fsSL https://github.com/docker/compose/releases/download/v2.17.2/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose
+  curl -fsSL https://github.com/docker/compose/releases/download/v2.24.0/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose
   chmod +x /usr/local/bin/docker-compose
   docker_cmd="docker-compose"
   return 0
@@ -696,7 +696,7 @@ services:
     $([[ ${config[security]} != 'reality' ]] && echo "- 8443" || true)
     restart: always
     environment:
-      TZ: Etc/UTC
+      TZ: Asia/Singapore
     volumes:
     - ./${path[engine]#${config_path}/}:/etc/${config[core]}/config.json
     $([[ ${config[security]} != 'reality' ]] && { [[ ${config[transport]} == 'http' ]] || [[ ${config[transport]} == 'tcp' ]] || [[ ${config[transport]} == 'tuic' ]] || [[ ${config[transport]} == 'hysteria2' ]]; } && echo "- ./${path[server_crt]#${config_path}/}:/etc/${config[core]}/server.crt" || true)
@@ -1171,7 +1171,7 @@ EOF
     "loglevel": "error"
   },
   "dns": {
-    "servers": [$([[ ${config[safenet]} == ON ]] && echo '"tcp+local://1.1.1.3","tcp+local://1.0.0.3"' || echo '"tcp+local://1.1.1.1","tcp+local://1.0.0.1"')]
+    "servers": [$([[ ${config[safenet]} == ON ]] && echo '"https+local://family.cloudflare-dns.com/dns-query","tcp+local://1.1.1.3"' || echo '"https+local://dns.cloudflare.com/dns-query","tcp+local://1.1.1.1"')]
   },
   "inbounds": [
     {
@@ -1209,7 +1209,8 @@ EOF
         "enabled": true,
         "destOverride": [
           "http",
-          "tls"
+          "tls",
+          "quic"
         ]
       }
     }
