@@ -39,7 +39,7 @@ WIDTH=60
 CHOICE_HEIGHT=20
 
 image[xray]="teddysun/xray:1.8.11"
-image[sing-box]="gzxhwq/sing-box:1.8.12"
+image[sing-box]="gzxhwq/sing-box:1.8.13"
 image[nginx]="nginx:1.25.5"
 image[certbot]="certbot/certbot:v2.10.0"
 image[haproxy]="haproxy:2.9.7"
@@ -761,6 +761,8 @@ echo "
     expose:
     - 80
     restart: always
+    volumes:
+    - ./website:/usr/share/nginx/html
     networks:
     - reality
   haproxy:
@@ -789,6 +791,7 @@ echo "
     - ./$(dirname "${path[server_pem]#${config_path}/}"):/certificate
     - ./${path[certbot_deployhook]#${config_path}/}:/deployhook.sh
     - ./${path[certbot_startup]#${config_path}/}:/startup.sh
+    - ./website:/website
     networks:
     - reality
     entrypoint: /bin/sh
@@ -907,13 +910,17 @@ awk -F= '{print \$2}' | tr -d : | tr '[:upper:]' '[:lower:]')
   fi
 fi
 while true; do
-  response=\$(curl -skL --max-time 3 http://${config[server]})
-  if echo "\$response" | grep 'Welcome to nginx!' >/dev/null; then
+  ls -d /website/* | grep -E '^/website/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\$'|xargs rm -f
+  uuid=\$(uuidgen)
+  echo "\$uuid" > "/website/\$uuid"
+  response=\$(curl -skL --max-time 3 http://${config[server]}/\$uuid)
+  if echo "\$response" | grep \$uuid >/dev/null; then
     break
   fi
   echo "Domain ${config[server]} is not pointing to the server"
   sleep 5
 done
+ls -d /website/* | grep -E '^/website/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\$'|xargs rm -f
 while true; do
   certbot certonly -n \\
     --standalone \\
@@ -952,7 +959,7 @@ EOF
 function generate_certbot_dockerfile {
   cat >"${path[certbot_dockerfile]}" << EOF
 FROM ${image[certbot]}
-RUN apk add --no-cache docker-cli-compose curl
+RUN apk add --no-cache docker-cli-compose curl uuidgen
 EOF
 }
 
