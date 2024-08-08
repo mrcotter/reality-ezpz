@@ -719,7 +719,7 @@ function install_docker {
     docker_cmd="docker-compose"
     return 0
   fi
-  curl -fsSL -m 30 https://github.com/docker/compose/releases/download/v2.24.7/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose
+  curl -fsSL -m 30 https://github.com/docker/compose/releases/download/v2.29.1/docker-compose-linux-$(uname -m) -o /usr/local/bin/docker-compose
   chmod +x /usr/local/bin/docker-compose
   docker_cmd="docker-compose"
   return 0
