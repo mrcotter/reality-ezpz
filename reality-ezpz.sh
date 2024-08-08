@@ -38,11 +38,11 @@ HEIGHT=30
 WIDTH=60
 CHOICE_HEIGHT=20
 
-image[xray]="teddysun/xray:1.8.11"
-image[sing-box]="gzxhwq/sing-box:1.8.13"
-image[nginx]="nginx:1.25.5"
-image[certbot]="certbot/certbot:v2.10.0"
-image[haproxy]="haproxy:2.9.7"
+image[xray]="teddysun/xray:1.8.23"
+image[sing-box]="gzxhwq/sing-box:1.9.3"
+image[nginx]="nginx:1.27.0"
+image[certbot]="certbot/certbot:v2.11.0"
+image[haproxy]="haproxy:2.9.9"
 image[python]="python:3.12-alpine"
 image[wgcf]="virb3/wgcf:2.2.22"
 
@@ -719,7 +719,7 @@ function install_docker {
     docker_cmd="docker-compose"
     return 0
   fi
-  curl -fsSL -m 30 https://github.com/docker/compose/releases/download/v2.24.7/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose
+  curl -fsSL -m 30 https://github.com/docker/compose/releases/download/v2.29.1/docker-compose-linux-$(uname -m) -o /usr/local/bin/docker-compose
   chmod +x /usr/local/bin/docker-compose
   docker_cmd="docker-compose"
   return 0
