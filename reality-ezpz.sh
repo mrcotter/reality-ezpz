@@ -38,13 +38,13 @@ HEIGHT=30
 WIDTH=60
 CHOICE_HEIGHT=20
 
-image[xray]="teddysun/xray:1.8.23"
-image[sing-box]="gzxhwq/sing-box:1.9.3"
-image[nginx]="nginx:1.27.0"
-image[certbot]="certbot/certbot:v2.11.0"
-image[haproxy]="haproxy:2.9.9"
-image[python]="python:3.12-alpine"
-image[wgcf]="virb3/wgcf:2.2.22"
+image[xray]="teddysun/xray:25.3.31"
+image[sing-box]="gzxhwq/sing-box:1.11.10"
+image[nginx]="nginx:1.28.0"
+image[certbot]="certbot/certbot:v4.0.0"
+image[haproxy]="haproxy:3.1.7"
+image[python]="python:3.13-alpine"
+image[wgcf]="virb3/wgcf:2.2.26"
 
 defaults[transport]=tcp
 defaults[domain]=www.google.com
@@ -968,7 +968,7 @@ function generate_tgbot_dockerfile {
 FROM ${image[python]}
 WORKDIR ${config_path}/tgbot
 RUN apk add --no-cache docker-cli-compose curl bash newt libqrencode-tools sudo openssl jq zip unzip
-RUN pip install --no-cache-dir python-telegram-bot==13.5
+RUN pip install --no-cache-dir python-telegram-bot[callback-data]==22.0 qrcode[pil]==8.1
 CMD [ "python", "./tgbot.py" ]
 EOF
 }
